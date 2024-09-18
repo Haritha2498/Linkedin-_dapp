@@ -39,13 +39,19 @@ const Myposts = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 ">
+      <a href="/home">
+        <button className="bg-blue-500 text-white p-2 rounded">Back</button>
+      </a>
       <h1 className="text-2xl font-bold mb-6">My Posts</h1>
       <div className="space-y-6">
         {posts.length === 0 ? (
           <p>No posts available.</p>
         ) : (
           posts.map((post, index) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-md w-6/12 ">
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg shadow-md w-6/12 "
+            >
               <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
               <p className="text-gray-700">{post.content}</p>
               <p className="mt-2 text-sm text-gray-500">

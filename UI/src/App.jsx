@@ -12,6 +12,8 @@ import Myposts from "./Pages/Myposts";
 import RecHome from "./Pages/RecHome";
 import RecProfile from "./Pages/RecProfile"
 import PostNewJob from "./Pages/PostNewJob";
+import Myjobs from "./Pages/Myjobs";
+import Addcertificate from "./Pages/Addcertificate";
 
 function App() {
 
@@ -19,7 +21,6 @@ function App() {
     createRoutesFromElements(
       <>
         <Route path="/">
-        
           <Route index element={<First />} />
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/login" element={<Login />} />
@@ -29,8 +30,10 @@ function App() {
           <Route path="/myposts" element={<Myposts />} />
           <Route path="/rechome" element={<RecHome />} />
           <Route path="/recprofile" element={<RecProfile />} />
+          <Route path="/myjobs" element={<Myjobs />} />
           <Route path="/newjob" element={<PostNewJob/>} />
 
+          <Route path="/addcer" element={<Addcertificate />} />
         </Route>
       </>
     )

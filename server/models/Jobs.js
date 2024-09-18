@@ -7,6 +7,7 @@ const jobSchema = new mongoose.Schema({
   location: { type: String, required: true },
   keySkills: [{ type: String, required: true }], // Array of key skills
   postedAt: { type: Date, default: Date.now },
+  appliedCandidates: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 module.exports = mongoose.model('Job', jobSchema);

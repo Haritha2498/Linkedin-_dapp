@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BrowserProvider, Contract } from "ethers";
 import { abi } from "../scdata/LinkedIn.json";
 import {  LinkedInModule} from "../scdata/deployed_addresses.json";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -16,6 +17,7 @@ const EditProfile = () => {
     alert(`MetaMask is connected. Address: ${signer.address}`);
   }
 
+  const navigate = useNavigate;
 
   // Initial state for the form data
   const [profileData, setProfileData] = useState({
@@ -100,12 +102,16 @@ const saveProfile = async () => {
       location: profileData.location,
       skill: profileData.skills
     };
+    console.log(data);
+
 
 const instance = new Contract(LinkedInModule, abi, signer);
-const txl = await instance.createProfile(data);
+ console.log(data);
+const txl = await instance.createProfile(data.name,data.headline,data.location,data.skill);
+ console.log(data);
 console.log("transaction details:", txl);
 
-
+ console.log(data);
 try {
   console.log("profile", profileData);
   const response = await fetch("/api/profile", {
@@ -119,7 +125,7 @@ try {
   if (response.ok) {
     const data = await response.json();
     console.log("Profile saved successfully:", data);
-    // Optionally, show a success message or redirect the user
+    navigate("/profile")
   } else {
     console.error("Failed to save profile:", response.statusText);
     // Optionally, show an error message

@@ -3,7 +3,9 @@ const router = express.Router();
 const Profile= require("../models/Profile");
 const Posts =require("../models/Posts");
 const Job = require('../models/Jobs');
-const CompanyProfile=require("../models/CompanyProfile")
+const CompanyProfile=require("../models/CompanyProfile");
+const Certificate=require("../models/Certificate")
+
 
 const verifyToken=require("../middleware/authMiddleware")
 
@@ -243,6 +245,83 @@ router.get('/company-jobs',verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
+
+router.get('/jobs',verifyToken, async (req, res) => {
+  try {
+    const user_id=req.userId;
+    console.log("from jobss")
+    console.log(user_id);
+    // Fetch all jobs from the database
+    const jobs = await Job.find();
+
+    // Check if there are any jobs available
+    if (jobs.length === 0) {
+      return res.status(404).json({ message: 'No jobs found' });
+    }
+
+    // Return the jobs in JSON format
+    res.status(200).json({ jobs, user_id });
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+//function to upload certifacte
+
+
+router.post('/certificates', verifyToken, async (req, res) => {
+  try {
+    const { certificateTitle, issuingOrganization, issueDate, certificateId, description } = req.body;
+
+    // Validation
+    if (!certificateTitle || !issuingOrganization || !issueDate || !certificateId || !description) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const userId = req.userId; // Assuming verifyToken middleware adds userId to the request
+
+    // Create a new certificate
+    const newCertificate = new Certificate({
+      certificateTitle,
+      issuingOrganization,
+      issueDate,
+      certificateId,
+      description,
+      userId
+    });
+
+
+    const savedCertificate = await newCertificate.save();
+
+    // Return success response
+    res.status(201).json(savedCertificate);
+  } catch (error) {
+    console.error('Error saving certificate:', error);
+    res.status(500).json({ error: 'Failed to save certificate' });
+  }
+});
+
+//function to get certificate of the user
+
+router.get("/certificates", verifyToken, async (req, res) => {
+  try {
+    // Fetch certificates based on the userId stored in the JWT token (req.userId)
+    const certificates = await Certificate.find({ userId: req.userId });
+
+    if (!certificates) {
+      return res.status(404).json({ message: "No certificates found" });
+    }
+
+    res.json(certificates);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 
 
 module.exports = router;

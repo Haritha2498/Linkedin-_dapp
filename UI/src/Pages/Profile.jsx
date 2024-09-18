@@ -4,6 +4,9 @@ const Profile = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [certificates, setCertificates] = useState([]); // State for certificates
+  const [certLoading, setCertLoading] = useState(true);
+  const [certError, setCertError] = useState(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -21,7 +24,6 @@ const Profile = () => {
         }
 
         const data = await response.json();
-        console.log(data, "data");
         setProfileData(data); // Store profile data in state
       } catch (error) {
         setError(error.message);
@@ -30,10 +32,38 @@ const Profile = () => {
       }
     };
 
-    fetchProfileData(); // Call the function to fetch profile data
+    // Fetch profile data
+    fetchProfileData();
   }, []); // Empty dependency array means this effect runs once after the initial render
 
-  console.log(profileData);
+  useEffect(() => {
+    const fetchCertificates = async () => {
+      try {
+        // Fetch certificates from API
+        const response = await fetch("/api/certificates", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const certData = await response.json();
+        setCertificates(certData); // Store certificates data in state
+      } catch (error) {
+        setCertError(error.message);
+      } finally {
+        setCertLoading(false); // Set loading to false once data is fetched
+      }
+    };
+
+    // Fetch certificates data
+    fetchCertificates();
+  }, []); // Empty dependency array means this effect runs once after the initial render
+
   if (loading) return <div>Loading...</div>; // Show loading state
   if (error) return <div>Error: {error}</div>; // Show error state
 
@@ -71,15 +101,6 @@ const Profile = () => {
             </li>
           </ul>
           <div className="flex items-center space-x-4">
-            {/* <img
-              className="w-10 h-10 rounded-full object-cover"
-              src={
-                profileData
-                  ? profileData.profileImage
-                  : "https://via.placeholder.com/150"
-              }
-              alt="Profile"
-            /> */}
             <h1 className="text-3xl font-bold mb-4">PROFILE</h1>
             <span className="text-gray-700">
               {profileData ? profileData.name : "your name"}
@@ -94,17 +115,8 @@ const Profile = () => {
         <div className="w-2/3 bg-white p-6 rounded-lg shadow-md">
           <div className="flex items-center justify-between">
             <div className="items-center space-x-4 mb-12">
-              {/* <img
-                className="w-20 h-20 rounded-full object-cover"
-                src={
-                  profileData
-                    ? profileData.profileImage
-                    : "https://via.placeholder.com/150"
-                }
-                alt="Profile"
-              /> */}
               <h1 className="text-3xl font-bold mb-4">PROFILE</h1>
-                <br />
+              <br />
               <div>
                 <h2 className="text-2xl font-semibold">
                   {profileData ? profileData.name.toUpperCase() : "Your name"}
@@ -129,13 +141,44 @@ const Profile = () => {
                 Edit Profile
               </button>
             </a>
-            
           </div>
 
           <div className="mt-6">
             <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
               Open to Work: Fullstack Developer Roles
             </button>
+            <a href="/addcer">
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-md ml-[10%] hover:bg-blue-700">
+                Add Certificates
+              </button>
+            </a>
+          </div>
+
+          {/* Certificates Section */}
+          <div className="mt-8 border-2 p-2">
+            <h3 className="text-xl font-semibold mb-4">Certificates</h3>
+            {certLoading ? (
+              <div>Loading certificates...</div>
+            ) : certError ? (
+              <div>Error fetching certificates: {certError}</div>
+            ) : certificates.length > 0 ? (
+              certificates.map((cert, index) => (
+                <div key={index} className="mb-4">
+                  <h4 className="font-semibold">
+                    {cert.certificateTitle} - {cert.issuingOrganization}
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Issued on: {new Date(cert.issueDate).toLocaleDateString()}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Certificate ID: {cert.certificateId}
+                  </p>
+                  <p className="text-sm text-gray-500">{cert.description}</p>
+                </div>
+              ))
+            ) : (
+              <p>No certificates uploaded yet..</p>
+            )}
           </div>
 
           {/* Skills Section */}
@@ -196,88 +239,39 @@ const Profile = () => {
         <div className="w-1/3 space-y-6">
           {/* Suggestions */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold">Suggested for You</h3>
-            <div className="mt-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <p>Enhance your profile with AI</p>
-                <button className="text-gray-500 hover:text-gray-800">X</button>
-              </div>
-              <div className="flex items-center justify-between">
-                <p>Maximize your chances to get a job</p>
-                <button className="text-gray-500 hover:text-gray-800">X</button>
-              </div>
-            </div>
+            <h2 className="text-xl font-semibold mb-4">Suggestions</h2>
+            <ul className="list-none">
+              <li>
+                <a href="#" className="text-blue-600 hover:underline">
+                  Follow Company X
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-blue-600 hover:underline">
+                  Follow Person Y
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-blue-600 hover:underline">
+                  Connect with Z
+                </a>
+              </li>
+            </ul>
           </div>
 
           {/* Analytics */}
           <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold">Analytics</h3>
-            <ul className="mt-4 space-y-2 text-gray-600">
-              <li>4 Profile views</li>
-              <li>10 Post impressions</li>
-              <li>3 Search appearances</li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold">Resources</h3>
-            <ul className="mt-4 space-y-2 text-gray-600">
-              <li>My Network</li>
-              <li>Saved items</li>
-            </ul>
-          </div>
-
-          {/* People You May Know */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold">People You May Know</h3>
-            <div className="mt-4 space-y-4">
-              <div className="flex items-center space-x-4">
-                <img
-                  className="w-10 h-10 rounded-full object-cover"
-                  src="https://via.placeholder.com/150"
-                  alt="User"
-                />
-                <div>
-                  <h4 className="font-medium">Abel Adana</h4>
-                  <p className="text-sm text-gray-500">
-                    Cyber Security Student
-                  </p>
-                </div>
-                <button className="text-blue-700 hover:text-blue-900">
-                  Connect
-                </button>
-              </div>
-              <div className="flex items-center space-x-4">
-                <img
-                  className="w-10 h-10 rounded-full object-cover"
-                  src="https://via.placeholder.com/150"
-                  alt="User"
-                />
-                <div>
-                  <h4 className="font-medium">Rahul CT</h4>
-                  <p className="text-sm text-gray-500">MERN Stack Developer</p>
-                </div>
-                <button className="text-blue-700 hover:text-blue-900">
-                  Connect
-                </button>
-              </div>
-              <div className="flex items-center space-x-4">
-                <img
-                  className="w-10 h-10 rounded-full object-cover"
-                  src="https://via.placeholder.com/150"
-                  alt="User"
-                />
-                <div>
-                  <h4 className="font-medium">Nandhu Raju</h4>
-                  <p className="text-sm text-gray-500">
-                    Blockchain Architect Student
-                  </p>
-                </div>
-                <button className="text-blue-700 hover:text-blue-900">
-                  Connect
-                </button>
-              </div>
+            <h2 className="text-xl font-semibold mb-4">Analytics</h2>
+            <div>
+              <p>
+                <strong>Profile views:</strong> 123
+              </p>
+              <p>
+                <strong>Post impressions:</strong> 456
+              </p>
+              <p>
+                <strong>Search appearances:</strong> 789
+              </p>
             </div>
           </div>
         </div>

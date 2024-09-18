@@ -1,8 +1,6 @@
 
-
-
-
 import React, { useState, useEffect } from "react";
+import Logout from '../Components/Logout'
 
 const RecHome = () => {
   const [companyData, setCompanyData] = useState(null);
@@ -129,13 +127,16 @@ const RecHome = () => {
           </div>
           <ul className="flex space-x-8 text-gray-600">
             <li>
+              <Logout/>
+            </li>
+            <li>
               <a href="#" className="hover:text-blue-700">
                 Home
               </a>
             </li>
             <li>
               <a href="/newjob" className="hover:text-blue-700">
-                Job Postings
+                Post New Job
               </a>
             </li>
             <li>
@@ -176,7 +177,7 @@ const RecHome = () => {
           <div className="w-1/2">
             {/* Job Postings */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-              <h2 className="text-xl font-semibold mb-4">Job Postings</h2>
+              <h2 className="text-xl font-semibold mb-4">Job Posted Earlier..</h2>
               <ul className="space-y-4">
                 {jobs.map((job) => (
                   <li

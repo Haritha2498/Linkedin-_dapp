@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { abi } from "../scdata/LinkedIn.json";
+import { BrowserProvider, Contract } from "ethers";
+
+import { LinkedInModule } from "../scdata/deployed_addresses.json";
 import { useNavigate } from "react-router-dom";
 
 const PostNewJob = () => {
@@ -6,10 +10,35 @@ const PostNewJob = () => {
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
   const [keySkills, setKeySkills] = useState("");
+  const [skillsArray, setSkillsArray] = useState([]);
   const navigate = useNavigate();
+
+  //connection to metamask
+  const provider = new BrowserProvider(window.ethereum);
+  async function connentToMetamask() {
+    const signer = await provider.getSigner();
+    console.log("signer", signer.address);
+    alert(`MetaMask is connected. Address: ${signer.address}`);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const skillsArr = keySkills.split(",").map((skill) => skill.trim());
+    setSkillsArray(skillsArr);
+    console.log("ewasd")
+
+    const signer = await provider.getSigner();
+    const instance = new Contract(LinkedInModule, abi, signer);
+    
+    const txl = await instance.addJob(
+      title,location,skillsArray
+    );
+    console.log(title, location, skillsArray);
+    console.log("transaction details:", txl);
+
+
+
     try {
       const response = await fetch("/api/newjobs", {
         method: "POST",
@@ -37,11 +66,21 @@ const PostNewJob = () => {
 
   return (
     <>
-      <a href="/rechome">
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-md w-24 hover:bg-blue-700">
-          BACK
+      <div className="w-full bg-gray-100  pt-10 pl-10 inline-flex">
+        <a href="/rechome">
+          <button className="bg-blue-500 border-2 text-white p-4 rounded-lg hover:bg-violet-400">
+            Back
+          </button>
+        </a>
+
+        <button
+          type="submit"
+          className="w-[15%] h-14  ml-10 border-2 bg-blue-500  text-white rounded-lg hover:bg-violet-400"
+          onClick={connentToMetamask}
+        >
+          connect to metamask
         </button>
-      </a>
+      </div>
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <form
           onSubmit={handleSubmit}

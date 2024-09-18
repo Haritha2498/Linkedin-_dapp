@@ -114,7 +114,7 @@ const Home = () => {
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-700">
+              <a href="myjobs" className="hover:text-blue-700">
                 Jobs
               </a>
             </li>
