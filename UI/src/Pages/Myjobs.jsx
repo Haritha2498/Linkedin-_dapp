@@ -33,7 +33,7 @@ const Myjobs = () => {
 
  const handleApply = async (jobId) => {
   try {
-    const response = await fetch("/api/applyjob", {
+    const response = await fetch("/api/applyjobs", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

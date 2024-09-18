@@ -14,6 +14,7 @@ import RecProfile from "./Pages/RecProfile"
 import PostNewJob from "./Pages/PostNewJob";
 import Myjobs from "./Pages/Myjobs";
 import Addcertificate from "./Pages/Addcertificate";
+import Applicants from "./Pages/Applicants";
 
 function App() {
 
@@ -32,7 +33,7 @@ function App() {
           <Route path="/recprofile" element={<RecProfile />} />
           <Route path="/myjobs" element={<Myjobs />} />
           <Route path="/newjob" element={<PostNewJob/>} />
-
+          <Route path="/applicants" element={<Applicants />} />
           <Route path="/addcer" element={<Addcertificate />} />
         </Route>
       </>

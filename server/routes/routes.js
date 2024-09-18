@@ -55,6 +55,27 @@ router.get('/profile', verifyToken, async (req, res) => {
   }
 });
 
+
+router.get('/profile/:id', verifyToken, async (req, res) => {
+  try {
+    const userId = req.params.id; // Assuming verifyToken sets req.userId
+
+    // Find the profile for the given userId
+    const profile = await Profile.findOne({ userId: userId });
+
+    if (!profile) {
+      // If no profile found, return a 404 status with an appropriate message
+      return res.status(404).json({ message: "Profile not found" });
+    }
+
+    // If profile is found, return the profile details
+    return res.status(200).json(profile);
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.post('/newpost', verifyToken, async (req, res) => {
   const userId = req.userId; // Assuming verifyToken sets req.userId
 
@@ -319,6 +340,39 @@ router.get("/certificates", verifyToken, async (req, res) => {
     res.json(certificates);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+
+
+router.post('/applyjobs', verifyToken, async (req, res) => {
+  const { jobId } = req.body;
+  const userId = req.userId;
+
+  if (!jobId || !userId) {
+    return res.status(400).json({ error: 'Job ID and Candidate ID are required' });
+  }
+
+  try {
+
+    const job = await Job.findById(jobId);
+
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+
+    if (!job.appliedCandidates.includes(userId)) {
+      job.appliedCandidates.push(userId);
+    }
+
+
+    await job.save();
+
+    res.status(200).json({ message: 'Candidate added successfully', job });
+  } catch (error) {
+    console.error('Error updating applied candidates:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
