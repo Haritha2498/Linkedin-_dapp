@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from "react";
+import { abi } from "../scdata/LinkedIn.json";
+import { BrowserProvider, Contract } from "ethers";
+import { LinkedInModule } from "../scdata/deployed_addresses.json";
+
+
 
 const Profile = () => {
-  const [profileData, setProfileData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState('');
+  const[project,setProject]= useState([])
+
+  const [name,setName]=useState('');
+  const[headline,setHeadline]=useState('');
+  const[location,setLocation]=useState('');
+  const[skills,setSkills]=useState([]);
+
+  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [certificates, setCertificates] = useState([]); // State for certificates
   const [certLoading, setCertLoading] = useState(true);
   const [certError, setCertError] = useState(null);
 
-  useEffect(() => {
+  const provider = new BrowserProvider(window.ethereum);
+
+  
+    useEffect(() => {
     const fetchProfileData = async () => {
       try {
         // Fetch profile data from API
@@ -18,53 +33,94 @@ const Profile = () => {
             "Content-Type": "application/json",
           },
         });
-
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
-
         const data = await response.json();
-        setProfileData(data); // Store profile data in state
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false); // Set loading to false once data is fetched
+        console.log(data)
+        const projects=data.projects
+        setProfileData(data)
+        setProject(projects)
+
+        console.log(projects);
+
+        console.log(project)
+        console.log(profileData)
       }
+       catch (error) {
+        setError(error.message);
+      } 
+    }
+      fetchProfileData();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchBlockData = async () => {
+      
+
+
+      try {
+        const signer = await provider.getSigner();
+
+        const userAddress = await signer.getAddress();
+        console.log("Signer Address:", userAddress);
+
+        console.log(signer.address);
+        const instance = new Contract(LinkedInModule, abi, provider);
+        
+        const result = await instance.getUserProfile(userAddress);
+        const name=result[0]
+        const location = result[2];
+        const headline = result[1];
+        const skills = result[3];
+        setName(name);
+        setHeadline(headline);
+        setLocation(location);
+        setSkills(skills);
+        console.log(name)
+        console.log(location);
+        console.log(headline);
+        console.log(skills);
+
+        console.log(profileData);
+
+
+      } catch (error) {
+        console.log("error", error);
+      }
+
+
     };
 
     // Fetch profile data
-    fetchProfileData();
+    fetchBlockData();
   }, []); // Empty dependency array means this effect runs once after the initial render
 
   useEffect(() => {
     const fetchCertificates = async () => {
       try {
-        // Fetch certificates from API
         const response = await fetch("/api/certificates", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         });
-
         if (!response.ok) {
           throw new Error(`Error: ${response.status}`);
         }
-
         const certData = await response.json();
-        setCertificates(certData); // Store certificates data in state
+        setCertificates(certData);
       } catch (error) {
         setCertError(error.message);
-      } finally {
-        setCertLoading(false); // Set loading to false once data is fetched
+      } 
+      finally {
+        setCertLoading(false);
       }
     };
-
-    // Fetch certificates data
     fetchCertificates();
-  }, []); // Empty dependency array means this effect runs once after the initial render
-
-  if (loading) return <div>Loading...</div>; // Show loading state
+  }, []); 
+  // if (loading) return <div>Loading...</div>; // Show loading state
   if (error) return <div>Error: {error}</div>; // Show error state
 
   return (
@@ -85,17 +141,13 @@ const Profile = () => {
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-blue-700">
+              <a href="/myjobs" className="hover:text-blue-700">
                 Jobs
               </a>
             </li>
+
             <li>
-              <a href="#" className="hover:text-blue-700">
-                Messaging
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-700">
+              <a href="/myjobs" className="hover:text-blue-700">
                 Notifications
               </a>
             </li>
@@ -119,17 +171,20 @@ const Profile = () => {
               <br />
               <div>
                 <h2 className="text-2xl font-semibold">
-                  {profileData ? profileData.name.toUpperCase() : "Your name"}
+                  {!profileData
+                    ? name.toUpperCase()
+                    : profileData.name.toUpperCase()}
                 </h2>
-                <p className="text-gray-600">
-                  {profileData
-                    ? profileData.location.toUpperCase()
-                    : "Your location"}
-                </p>
+
                 <p className="text-sm text-gray-500">
-                  {profileData
-                    ? profileData.headline.toUpperCase()
-                    : "define you"}
+                  {!profileData
+                    ? headline.toUpperCase()
+                    : profileData.headline.toUpperCase()}
+                </p>
+                <p className="text-gray-600">
+                  {!profileData
+                    ? location.toUpperCase()
+                    : profileData.location.toUpperCase()}
                 </p>
               </div>
             </div>
@@ -156,24 +211,31 @@ const Profile = () => {
 
           {/* Certificates Section */}
           <div className="mt-8 border-2 p-2">
-            <h3 className="text-xl font-semibold mb-4">Certificates</h3>
+            <div className="inline-flex w-full">
+              <h3 className="text-xl font-semibold mb-4">Certificates</h3>
+              <a href="/certificates">
+                <h3 className="text-blue-600 hover:text-blue-800 ml-[100%]">
+                  View Details..
+                </h3>
+              </a>
+            </div>
             {certLoading ? (
               <div>Loading certificates...</div>
             ) : certError ? (
               <div>Error fetching certificates: {certError}</div>
             ) : certificates.length > 0 ? (
               certificates.map((cert, index) => (
-                <div key={index} className="mb-4">
+                <div key={index} className="mb-4 border-2 p-2">
                   <h4 className="font-semibold">
                     {cert.certificateTitle} - {cert.issuingOrganization}
                   </h4>
-                  <p className="text-sm text-gray-600">
+                  {/* <p className="text-sm text-gray-600">
                     Issued on: {new Date(cert.issueDate).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-500">
                     Certificate ID: {cert.certificateId}
                   </p>
-                  <p className="text-sm text-gray-500">{cert.description}</p>
+                  <p className="text-sm text-gray-500">{cert.description}</p> */}
                 </div>
               ))
             ) : (
@@ -185,7 +247,13 @@ const Profile = () => {
           <div className="mt-8 border-2 p-2">
             <h3 className="text-xl font-semibold mb-4">Skills</h3>
             <ul className="list-disc pl-6 text-gray-700">
-              {profileData.skills && profileData.skills.length > 0 ? (
+              {/* Check if the skills from smart contract are present */}
+              {skills && skills.length > 0 ? (
+                skills.map((skill, index) => <li key={index}>{skill}</li>)
+              ) : /* If no skills from smart contract, check for skills in profileData */
+              profileData &&
+                profileData.skills &&
+                profileData.skills.length > 0 ? (
                 profileData.skills.map((skill, index) => (
                   <li key={index}>{skill}</li>
                 ))

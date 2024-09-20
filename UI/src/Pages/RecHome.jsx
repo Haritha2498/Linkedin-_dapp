@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from "react";
-import Logout from '../Components/Logout'
+import Logout from "../Components/Logout";
+import { useNavigate } from "react-router-dom";
 
 const RecHome = () => {
   const [companyData, setCompanyData] = useState(null);
@@ -11,6 +11,7 @@ const RecHome = () => {
   const [recommendedCandidates, setRecommendedCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate=useNavigate();
 
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -23,7 +24,7 @@ const RecHome = () => {
         });
 
         if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
+          navigate("/recprofile")
         }
 
         const data = await response.json();
@@ -73,9 +74,6 @@ const RecHome = () => {
     fetchCompanyData();
   }, []);
 
-
-
-
   useEffect(() => {
     const fetchCompanyJobs = async () => {
       try {
@@ -94,12 +92,6 @@ const RecHome = () => {
 
     fetchCompanyJobs();
   }, []);
-
-
-
-
-
-
 
   if (loading) {
     return (
@@ -140,6 +132,11 @@ const RecHome = () => {
               </a>
             </li>
             <li>
+              <a href="/recjobs" className="hover:text-blue-700">
+                Posted Jobs
+              </a>
+            </li>
+            <li>
               <a href="/applicants" className="hover:text-blue-700">
                 Applicants
               </a>
@@ -160,57 +157,77 @@ const RecHome = () => {
           <div className="w-1/4 bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Company Profile</h2>
             <div className="flex flex-col items-center space-y-4">
-              <div className="text-xl font-medium">{companyData.name}</div>
-              <p className="text-lg text-gray-600">{companyData.location}</p>
-              <p className="text-lg text-gray-600">{companyData.industry}</p>
-              <p className="text-lg text-gray-600">{companyData.employees}</p>
-              <p className="text-lg text-gray-600">{companyData.description}</p>
-              <a href="/recprofile">
-                <button className="bg-blue-700 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-800">
-                  Edit Profile
-                </button>
-              </a>
+              {companyData && (
+                <>
+                  <div className="text-xl font-medium">{companyData.name}</div>
+                  <p className="text-lg text-gray-600">
+                    {companyData.location}
+                  </p>
+                  <p className="text-lg text-gray-600">
+                    {companyData.industry}
+                  </p>
+                  <p className="text-lg text-gray-600">
+                    {companyData.employees}
+                  </p>
+                  <p className="text-lg text-gray-600">
+                    {companyData.description}
+                  </p>
+                  <a href="/recprofile">
+                    <button className="bg-blue-700 text-white px-4 py-2 rounded-md mt-4 hover:bg-blue-800">
+                      Edit Profile
+                    </button>
+                  </a>
+                </>
+              )}
             </div>
           </div>
 
           {/* Middle Section (Job Postings & Applicants) */}
           <div className="w-1/2">
-            {/* Job Postings */}
+            Job Postings
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-              <h2 className="text-xl font-semibold mb-4">
-                Job Posted Earlier..
-              </h2>
-              <ul className="space-y-4">
-                {jobs.map((job) => (
-                  <li
-                    key={job.id}
-                    className="bg-gray-100 p-4 rounded-md shadow-sm"
-                  >
-                    <h3 className="font-medium">{job.title}</h3>
-                    <p className="text-sm text-gray-600">{job.location}</p>
-                    <p className="text-sm text-gray-600">{job.description}</p>
-                  </li>
-                ))}
-              </ul>
+              <h2 className="text-xl font-semibold mb-4">Job Postings</h2>
+              {jobs.length > 0 ? (
+                <ul className="space-y-4">
+                  {jobs.slice(0, 4).map((job) => (
+                    <li
+                      key={job.id}
+                      className="bg-gray-100 p-4 rounded-md shadow-sm"
+                    >
+                      <h3 className="font-medium">{job.title}</h3>
+                      <p className="text-sm text-gray-600">{job.location}</p>
+                      <p className="text-sm text-gray-600">{job.description}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500">No job posted yet.</p>
+              )}
             </div>
+
 
             {/* Applicants */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
               <h2 className="text-xl font-semibold mb-4">Applicants</h2>
               <ul className="space-y-4">
-                {applicants.map((applicant) => (
-                  <li
-                    key={applicant.id}
-                    className="bg-gray-100 p-4 rounded-md shadow-sm"
-                  >
-                    <h3 className="font-medium">{applicant.name}</h3>
-                    <p className="text-sm text-gray-600">
-                      Applied for {applicant.appliedFor}
-                    </p>
-                  </li>
-                ))}
+                {applicants.length > 0 ? (
+                  applicants.map((applicant) => (
+                    <li
+                      key={applicant.id}
+                      className="bg-gray-100 p-4 rounded-md shadow-sm"
+                    >
+                      <h3 className="font-medium">{applicant.name}</h3>
+                      <p className="text-sm text-gray-600">
+                        Applied for {applicant.appliedFor}
+                      </p>
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No applicants yet.</p>
+                )}
               </ul>
             </div>
+
           </div>
 
           {/* Right Sidebar (Recommended Candidates) */}
@@ -219,25 +236,31 @@ const RecHome = () => {
               Recommended Candidates
             </h2>
             <ul className="space-y-4">
-              {recommendedCandidates.map((candidate) => (
-                <li
-                  key={candidate.id}
-                  className="bg-gray-100 p-4 rounded-md shadow-sm"
-                >
-                  <h3 className="font-medium">{candidate.name}</h3>
-                  <p className="text-sm text-gray-600">
-                    Skills: {candidate.skills}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Experience: {candidate.experience}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Location: {candidate.location}
-                  </p>
-                </li>
-              ))}
+              {recommendedCandidates.length > 0 ? (
+                recommendedCandidates.map((candidate) => (
+                  <li
+                    key={candidate.id}
+                    className="bg-gray-100 p-4 rounded-md shadow-sm"
+                  >
+                    <h3 className="font-medium">{candidate.name}</h3>
+                    <p className="text-sm text-gray-600">
+                      Skills: {candidate.skills}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Experience: {candidate.experience}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Location: {candidate.location}
+                    </p>
+                  </li>
+                ))
+              ) : (
+                <p className="text-gray-500">No recommended candidates yet.</p>
+              )}
             </ul>
           </div>
+
+
         </div>
       </div>
     </div>

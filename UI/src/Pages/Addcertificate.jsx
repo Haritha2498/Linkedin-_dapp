@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { abi } from "../scdata/LinkedIn.json";
+import { BrowserProvider, Contract } from "ethers";
+import { LinkedInModule } from "../scdata/deployed_addresses.json";
+
 
 const Addcertificate = () => {
   const [certificateTitle, setCertificateTitle] = useState("");
@@ -7,6 +11,17 @@ const Addcertificate = () => {
   const [certificateId, setCertificateId] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
+
+
+
+  //connection to metamask
+  const provider = new BrowserProvider(window.ethereum);
+  async function connentToMetamask() {
+    const signer = await provider.getSigner();
+    console.log("signer", signer.address);
+    alert(`MetaMask is connected. Address: ${signer.address}`);
+  }
+
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -31,6 +46,29 @@ const Addcertificate = () => {
       description,
     };
 
+    const signer = await provider.getSigner();
+  
+    const instance = new Contract(LinkedInModule, abi, signer);
+
+    console.log("hdkjfhhg");
+    console.log(certificateTitle, issuingOrganization, certificateId);
+
+    // const txl = await instance.addCertificate(certificateId);
+
+    const txl = await instance.addCertificate(certificateId,certificateTitle,issuingOrganization,description);
+
+    //  const gasEstimate = await instance.estimateGas.addCertificate(
+    //    certificateId
+    //  );
+    //  const txl = await instance.addCertificate(certificateId, {
+    //    gasLimit: gasEstimate, // Use estimated gas
+    //  });
+
+    await txl.wait(); // Wait for the transaction to be mined
+
+    
+    console.log("transaction details:", txl);
+
     try {
       const response = await fetch("/api/certificates", {
         method: "POST",
@@ -41,7 +79,7 @@ const Addcertificate = () => {
       });
 
       if (response.ok) {
-        console.log(response)
+        console.log(response);
         setMessage("Certificate details uploaded successfully!");
         // Clear the form
         setCertificateTitle("");
@@ -63,11 +101,18 @@ const Addcertificate = () => {
       <a href="/profile">
         <button className="bg-blue-500 text-white p-2 rounded">Back</button>
       </a>
+       <button
+          type="submit"
+          className="w-[15%] h-14  ml-10 border-2 bg-blue-500  text-white rounded-lg hover:bg-violet-400"
+          onClick={connentToMetamask}
+        >
+          connect to metamask
+        </button>
       <h2 className="text-2xl font-bold mb-4">Upload Certificate</h2>
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-lg shadow-md"
+        className="bg-white p-6 rounded-lg shadow-md w-8/12 text-lg"
       >
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700">

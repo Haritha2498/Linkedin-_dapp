@@ -43,7 +43,7 @@ const Home = () => {
 
   const handlePostSubmit = async () => {
     try {
-      // Send post data to API
+      
       const response = await fetch("/api/newpost", {
         method: "POST",
         headers: {
@@ -100,7 +100,7 @@ const Home = () => {
           <div className="text-2xl font-bold text-blue-700">LinkedIn</div>
           <ul className="flex space-x-8 text-gray-600">
             <li>
-              <Logout/>
+              <Logout />
               {/* <a href="/" className="hover:text-blue-700">
                 logout
               </a> */}
@@ -114,17 +114,13 @@ const Home = () => {
               </a>
             </li>
             <li>
-              <a href="myjobs" className="hover:text-blue-700">
+              <a href="/myjobs" className="hover:text-blue-700">
                 Jobs
               </a>
             </li>
+            
             <li>
-              <a href="#" className="hover:text-blue-700">
-                Messaging
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-700">
+              <a href="/myjobs" className="hover:text-blue-700">
                 Notifications
               </a>
             </li>
@@ -154,6 +150,11 @@ const Home = () => {
             <h3 className="text-lg font-medium">
               {profileData ? profileData.name.toUpperCase() : "Create profile"}
             </h3>
+            <p className="text-gray-600">
+              {profileData
+                ? profileData.location.toUpperCase()
+                : "Your location"}
+            </p>
             <p className="text-sm text-gray-600">
               <p className="text-sm text-gray-500">
                 {profileData

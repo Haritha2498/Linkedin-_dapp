@@ -1,10 +1,13 @@
+
+
 import React, { useState, useEffect } from "react";
 
 const Myjobs = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userid,setuserid] = useState('')
+  const [userid, setUserid] = useState("");
+  const [appliedJobs, setAppliedJobs] = useState([]); // New state to track applied jobs
 
   // Fetch job postings on component mount
   useEffect(() => {
@@ -12,14 +15,14 @@ const Myjobs = () => {
       try {
         const response = await fetch("/api/jobs"); // Assuming you have an API route `/api/jobs`
         if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
+          throw new Error(`Error: no job found`);
         }
 
         const data = await response.json();
         console.log(data);
-        console.log(data.user_id)
-        setuserid(data.user_id);
-        console.log(userid,"jokl");
+        console.log(data.user_id);
+        setUserid(data.user_id);
+        console.log(userid, "jokl");
         setJobs(data.jobs); // Set the jobs in state
         setLoading(false);
       } catch (error) {
@@ -31,34 +34,34 @@ const Myjobs = () => {
     fetchJobs();
   }, []);
 
- const handleApply = async (jobId) => {
-  try {
-    const response = await fetch("/api/applyjobs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  const handleApply = async (jobId) => {
+    try {
+      const response = await fetch("/api/applyjobs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ jobId }),
+      });
 
-      },
-      body: JSON.stringify({ jobId }),
-    });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+      const data = await response.json();
+
+      if (data.success) {
+        alert(`You have successfully applied for the job with ID: ${jobId}`);
+        // Add the job ID to the appliedJobs array
+        setAppliedJobs((prevAppliedJobs) => [...prevAppliedJobs, jobId]);
+      } else {
+        alert(`Failed to apply for the job. Reason: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error applying for the job:", error);
+      alert("An error occurred while applying for the job. Please try again.");
     }
-
-    const data = await response.json();
-
-    if (data.success) {
-      alert(`You have successfully applied for the job with ID: ${jobId}`);
-    } else {
-      alert(`Failed to apply for the job. Reason: ${data.message}`);
-    }
-  } catch (error) {
-    console.error("Error applying for the job:", error);
-    alert("An error occurred while applying for the job. Please try again.");
-  }
-};
-
+  };
 
   if (loading) {
     return (
@@ -79,7 +82,9 @@ const Myjobs = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <a href="/home">
-        <button className="bg-blue-500 text-white p-2 rounded mt-10 ml-10">Back</button>
+        <button className="bg-blue-500 text-white p-2 rounded mt-10 ml-10">
+          Back
+        </button>
       </a>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Available Jobs</h1>
@@ -98,9 +103,14 @@ const Myjobs = () => {
                 </p>
                 <button
                   onClick={() => handleApply(job._id)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  className={`${
+                    appliedJobs.includes(job._id)
+                      ? "bg-green-500 text-white"
+                      : "bg-blue-500 text-white"
+                  } px-4 py-2 rounded-md hover:bg-opacity-90`}
+                  disabled={appliedJobs.includes(job._id)} // Disable button if already applied
                 >
-                  Apply Now
+                  {appliedJobs.includes(job._id) ? "Applied" : "Apply Now"}
                 </button>
               </div>
             ))}

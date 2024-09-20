@@ -26,7 +26,7 @@ const PostNewJob = () => {
 
     const skillsArr = keySkills.split(",").map((skill) => skill.trim());
     setSkillsArray(skillsArr);
-    console.log("ewasd")
+    console.log(skillsArr);
 
     const signer = await provider.getSigner();
     const instance = new Contract(LinkedInModule, abi, signer);

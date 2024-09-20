@@ -15,6 +15,9 @@ import PostNewJob from "./Pages/PostNewJob";
 import Myjobs from "./Pages/Myjobs";
 import Addcertificate from "./Pages/Addcertificate";
 import Applicants from "./Pages/Applicants";
+import Get from "./Pages/Get";
+import Certificates from "./Pages/Certificates";
+import PostedJobs from "./Pages/Allrecjobs";
 
 function App() {
 
@@ -32,9 +35,13 @@ function App() {
           <Route path="/rechome" element={<RecHome />} />
           <Route path="/recprofile" element={<RecProfile />} />
           <Route path="/myjobs" element={<Myjobs />} />
-          <Route path="/newjob" element={<PostNewJob/>} />
+          <Route path="/newjob" element={<PostNewJob />} />
           <Route path="/applicants" element={<Applicants />} />
           <Route path="/addcer" element={<Addcertificate />} />
+          <Route path="/certificates" element={<Certificates />} />
+          <Route path="/recjobs" element={<PostedJobs />} />
+
+          <Route path="/get" element={<Get />} />
         </Route>
       </>
     )

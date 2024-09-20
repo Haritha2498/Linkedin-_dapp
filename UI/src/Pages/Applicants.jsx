@@ -143,6 +143,11 @@ const Applicants = () => {
 
   return (
     <div className="w-1/2">
+      <a href="/rechome">
+        <button className="bg-blue-500 border-2 text-white p-4 rounded-lg hover:bg-violet-400 ml-10 mt-10">
+          Back
+        </button>
+      </a>
       {/* Job Postings */}
       <div className="bg-white p-6 rounded-lg shadow-md mb-8">
         <h2 className="text-xl font-semibold mb-4">Job Postings</h2>

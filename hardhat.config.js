@@ -9,7 +9,7 @@ module.exports = {
     },
     infura:{
       url:"https://sepolia.infura.io/v3/66d60f103eac4256995259d73ede2b51",
-      accounts:["privatekey"]
+      accounts:["private_key"]
     },
   },
   solidity: "0.8.24",
