@@ -125,6 +125,7 @@ const Applicants = () => {
         throw new Error("Failed to fetch candidate details");
       }
       const data = await response.json();
+      console.log(data);
       setCandidateDetails((prevDetails) => ({
         ...prevDetails,
         [candidateId]: data, // Store details by candidateId
@@ -191,7 +192,7 @@ const Applicants = () => {
                                 <p>
                                   Name: {candidateDetails[candidateId].name}
                                   <br />
-                                  Email: {candidateDetails[candidateId].email}
+                                  About: {candidateDetails[candidateId].headline}
                                   <br />
                                   Skills:{" "}
                                   {candidateDetails[candidateId].skills.join(

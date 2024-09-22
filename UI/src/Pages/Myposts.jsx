@@ -19,7 +19,7 @@ const Myposts = () => {
         });
 
         if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
+          throw new Error(`Error: no post yet`);
         }
 
         const data = await response.json();

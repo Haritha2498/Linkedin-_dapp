@@ -229,13 +229,13 @@ const Profile = () => {
                   <h4 className="font-semibold">
                     {cert.certificateTitle} - {cert.issuingOrganization}
                   </h4>
-                  {/* <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600">
                     Issued on: {new Date(cert.issueDate).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-500">
                     Certificate ID: {cert.certificateId}
                   </p>
-                  <p className="text-sm text-gray-500">{cert.description}</p> */}
+                  <p className="text-sm text-gray-500">{cert.description}</p>
                 </div>
               ))
             ) : (
