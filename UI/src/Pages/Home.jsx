@@ -15,7 +15,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        // Fetch profile data from API
+        
         const response = await fetch("/api/profile", {
           method: "GET",
           headers: {
@@ -25,22 +25,20 @@ const Home = () => {
 
         if (!response.ok) {
           navigate("/editprofile")
-          // throw new Error(`Error: ${response.status}`);
         }
 
         const data = await response.json();
         console.log(data, "data");
-        setProfileData(data); // Store profile data in state
+        setProfileData(data);
       } catch (error) {
         setError(error.message);
       } finally {
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false);
       }
     };
 
-    fetchProfileData(); // Call the function to fetch profile data
-  }, []); // Empty dependency array means this effect runs once after the initial render
-
+    fetchProfileData(); 
+  }, []); 
   const handlePostSubmit = async () => {
     try {
       
@@ -62,7 +60,6 @@ const Home = () => {
       const data = await response.json();
       console.log(data, "Post created");
        window.alert("Post created successfully!");
-      // Clear form fields after successful post
       setPostTitle("");
       setPostContent("");
     } catch (error) {
@@ -70,27 +67,9 @@ const Home = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>; // Show loading state
-  if (error) return <div>Error: {error}</div>; // Show error state
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>; 
 
-
-
-
-
-    // const navigate=useNavigate();
-    // const logout=async()=>{
-    //     try{
-    //     const res=await fetch ('/api/logout');
-    //         if(res.ok){
-    //             toast.success("Logout Success")
-    //             navigate('/')
-    //         }
-    //     }
-    //     catch(error){
-    //         toast.error("something went wrong")
-    //     }
-
-    // }
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -101,12 +80,7 @@ const Home = () => {
           <ul className="flex space-x-8 text-gray-600">
             <li>
               <Logout />
-              {/* <a href="/" className="hover:text-blue-700">
-                logout
-              </a> */}
-              {/* <button className="ml-20" onClick={logout}>
-                Logout
-              </button> */}
+              
             </li>
             <li>
               <a href="/myposts" className="hover:text-blue-700">
@@ -125,14 +99,7 @@ const Home = () => {
               </a>
             </li>
           </ul>
-          {/* <div className="flex items-center space-x-4">
-            <img
-              className="w-10 h-10 rounded-full object-cover"
-              src="https://via.placeholder.com/150"
-              alt="Profile"
-            />
-            <span className="text-gray-700">John Doe</span>
-          </div> */}
+          
         </div>
       </nav>
 

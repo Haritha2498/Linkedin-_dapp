@@ -13,8 +13,6 @@ const Myposts = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            // Include any necessary authentication headers
-            // "Authorization": `Bearer ${yourToken}`
           },
         });
 
@@ -23,19 +21,18 @@ const Myposts = () => {
         }
 
         const data = await response.json();
-        setPosts(data); // Store posts in state
+        setPosts(data); 
       } catch (error) {
         setError(error.message);
       } finally {
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false); 
       }
     };
 
-    fetchPosts(); // Call the function to fetch posts
-  }, []); // Empty dependency array means this effect runs once after the initial render
-
-  if (loading) return <div>Loading...</div>; // Show loading state
-  if (error) return <div>Error: {error}</div>; // Show error state
+    fetchPosts(); 
+  }, []);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>; 
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 ">

@@ -53,18 +53,10 @@ const Addcertificate = () => {
     console.log("hdkjfhhg");
     console.log(certificateTitle, issuingOrganization, certificateId);
 
-    // const txl = await instance.addCertificate(certificateId);
 
     const txl = await instance.addCertificate(certificateId,certificateTitle,issuingOrganization,description);
 
-    //  const gasEstimate = await instance.estimateGas.addCertificate(
-    //    certificateId
-    //  );
-    //  const txl = await instance.addCertificate(certificateId, {
-    //    gasLimit: gasEstimate, // Use estimated gas
-    //  });
-
-    await txl.wait(); // Wait for the transaction to be mined
+    await txl.wait(); 
 
     
     console.log("transaction details:", txl);
@@ -81,7 +73,6 @@ const Addcertificate = () => {
       if (response.ok) {
         console.log(response);
         setMessage("Certificate details uploaded successfully!");
-        // Clear the form
         setCertificateTitle("");
         setIssuingOrganization("");
         setIssueDate("");

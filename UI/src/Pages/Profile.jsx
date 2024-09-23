@@ -120,8 +120,7 @@ const Profile = () => {
     };
     fetchCertificates();
   }, []); 
-  // if (loading) return <div>Loading...</div>; // Show loading state
-  if (error) return <div>Error: {error}</div>; // Show error state
+  if (error) return <div>Error: {error}</div>; 
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -247,10 +246,9 @@ const Profile = () => {
           <div className="mt-8 border-2 p-2">
             <h3 className="text-xl font-semibold mb-4">Skills</h3>
             <ul className="list-disc pl-6 text-gray-700">
-              {/* Check if the skills from smart contract are present */}
               {skills && skills.length > 0 ? (
                 skills.map((skill, index) => <li key={index}>{skill}</li>)
-              ) : /* If no skills from smart contract, check for skills in profileData */
+              ) :
               profileData &&
                 profileData.skills &&
                 profileData.skills.length > 0 ? (

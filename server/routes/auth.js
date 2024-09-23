@@ -8,13 +8,13 @@ const jwt = require("jsonwebtoken");
 // User registration
 router.post("/register", async (req, res) => {
   try {
-    // const {} = userDetails
+    
     const userDetails = req.body;
     const username = userDetails.userName;
     const password = userDetails.password;
     const email = userDetails.email;
     const userType = userDetails.userType
-    // const { username, password } = req.body;
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ username, password: hashedPassword, email, userType });
     await user.save();
@@ -52,14 +52,14 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    res.cookie("Authtoken", token);  ///auth token nome of token.,'token ' value of token
+    res.cookie("Authtoken", token);  
     res.json({
       status: true,
       message: "login success", 
       token,
       userType: user.userType
     });
-    //  console.log('/login in the bakend res', res)
+    
     return res;
   } catch (error) {
     console.log(error);

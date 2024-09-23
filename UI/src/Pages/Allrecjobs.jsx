@@ -70,14 +70,7 @@ const PostedJobs = () => {
               <div key={index} className="bg-white shadow-md p-6 rounded-lg">
                 <h2 className="text-2xl font-semibold">{job.title}</h2>
                 <p className="text-gray-600">Location: {job.location}</p>
-                <p className="text-gray-500">
-                  Posted on:{job.po}
-                  {/* {new Date(job.postedAt * 1000).toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })} */}
-                </p>
+                
                 <p className="text-gray-500">Key Skills: {job.keySkills}</p>
               </div>
             ))}

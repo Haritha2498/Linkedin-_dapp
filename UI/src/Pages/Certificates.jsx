@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { BrowserProvider, Contract, ethers } from "ethers"; // Assuming ethers.js is used
-import { LinkedInModule } from "../scdata/deployed_addresses.json"; // Import your contract details
+import { BrowserProvider, Contract } from "ethers"; 
+import { LinkedInModule } from "../scdata/deployed_addresses.json";
 import { abi } from "../scdata/LinkedIn.json";
 
 

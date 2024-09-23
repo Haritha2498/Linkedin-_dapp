@@ -7,13 +7,12 @@ const Myjobs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userid, setUserid] = useState("");
-  const [appliedJobs, setAppliedJobs] = useState([]); // New state to track applied jobs
+  const [appliedJobs, setAppliedJobs] = useState([]); 
 
-  // Fetch job postings on component mount
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch("/api/jobs"); // Assuming you have an API route `/api/jobs`
+        const response = await fetch("/api/jobs"); 
         if (!response.ok) {
           throw new Error(`Error: no job found`);
         }
@@ -23,7 +22,7 @@ const Myjobs = () => {
         console.log(data.user_id);
         setUserid(data.user_id);
         console.log(userid, "jokl");
-        setJobs(data.jobs); // Set the jobs in state
+        setJobs(data.jobs); 
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -52,7 +51,6 @@ const Myjobs = () => {
 
       if (data.success) {
         alert(`You have successfully applied for the job with ID: ${jobId}`);
-        // Add the job ID to the appliedJobs array
         setAppliedJobs((prevAppliedJobs) => [...prevAppliedJobs, jobId]);
       } else {
         alert(`Failed to apply for the job. Reason: ${data.message}`);
@@ -108,7 +106,7 @@ const Myjobs = () => {
                       ? "bg-green-500 text-white"
                       : "bg-blue-500 text-white"
                   } px-4 py-2 rounded-md hover:bg-opacity-90`}
-                  disabled={appliedJobs.includes(job._id)} // Disable button if already applied
+                  disabled={appliedJobs.includes(job._id)} 
                 >
                   {appliedJobs.includes(job._id) ? "Applied" : "Apply Now"}
                 </button>

@@ -25,7 +25,7 @@ const EditProfile = () => {
     headline: "",
     location:"",
     about: "",
-    skills: [""], // Initialize skills as an array with an empty string
+    skills: [""], 
     projects: [{ title: "", description: "" }],
     experience: [{ company: "", role: "", duration: "" }],
   });
@@ -62,7 +62,7 @@ const EditProfile = () => {
   const handleAdd = (section) => {
     const newSection = [...profileData[section]];
     if (section === "skills") {
-      newSection.push(""); // Add an empty skill field
+      newSection.push(""); 
     } else {
       newSection.push({
         title: "",
@@ -87,10 +87,6 @@ const EditProfile = () => {
     });
   };
 
-  // Save profile (you can implement the API call here)
-//   const saveProfile = () => {
-//     console.log("Profile saved:", profileData);
-//   };
 
 const saveProfile = async () => {
   
@@ -115,11 +111,11 @@ console.log("transaction details:", txl);
 try {
   console.log("profile", profileData);
   const response = await fetch("/api/profile", {
-    method: "POST", // or "PUT" if you're updating an existing profile
+    method: "POST", 
     headers: {
-      "Content-Type": "application/json", // sending JSON
+      "Content-Type": "application/json", 
     },
-    body: JSON.stringify(profileData), // converting profileData to JSON string
+    body: JSON.stringify(profileData), 
   });
 
   if (response.ok) {
@@ -128,11 +124,10 @@ try {
     navigate("/profile")
   } else {
     console.error("Failed to save profile:", response.statusText);
-    // Optionally, show an error message
+    
   }
 } catch (error) {
   console.error("An error occurred while saving the profile:", error);
-  // Optionally, show an error message
 }
 };
 
@@ -201,7 +196,7 @@ try {
               type="text"
               placeholder="Skill"
               value={skill}
-              onChange={(e) => handleSkillChange(e, index)} // Use handleSkillChange to update individual skill
+              onChange={(e) => handleSkillChange(e, index)} 
               className="border p-2 w-full"
             />
             <button

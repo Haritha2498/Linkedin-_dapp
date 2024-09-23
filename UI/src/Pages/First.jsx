@@ -7,33 +7,7 @@ const First = () => {
       <nav className="bg-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold text-blue-700">LinkedIn</div>
-          {/* <ul className="flex space-x-8 text-gray-600">
-            <li>
-              <a href="/home" className="hover:text-blue-700">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-700">
-                My Network
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-700">
-                Jobs
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-700">
-                Messaging
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-blue-700">
-                Notifications
-              </a>
-            </li>
-          </ul> */}
+          
           <a href="/sign-up">
             <button className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-blue-800">
               Sign Up

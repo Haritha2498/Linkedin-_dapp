@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -26,11 +25,9 @@ const Login = () => {
     console.log(res, "login res from /login");
 
     if (res.ok) {
-      // console.log('/login resp json', data)
       const data = await res.json();
       const userType = data.userType;
       console.log('usertype ', userType)
-      // toast.success(`Logged in as : ${userType}`);
       if (userType ==="recruiter") 
         return navigate("/rechome");
       else
@@ -116,4 +113,3 @@ const getUserType = () => {
 };
 
 export { Login as default, getUserType };
-// export default LoginPage
